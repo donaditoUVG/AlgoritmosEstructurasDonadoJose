@@ -94,7 +94,7 @@ public class Main {
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             Random random = new Random();
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 3000; i++) {
                 int numero = random.nextInt(10001); // Límite: 10,000
                 bufferedWriter.write(numero + "\n");
             }
