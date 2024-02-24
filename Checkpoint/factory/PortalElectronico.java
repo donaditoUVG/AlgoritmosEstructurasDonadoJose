@@ -23,14 +23,14 @@ public class PortalElectronico {
 		System.out.println("Bienvenido al portal electronico");
 		System.out.println("Ingrese su usuario (correo electronico)");
 		String username = in.nextLine();
-		System.out.println("Ingrese password");
+		System.out.println("Ingrese la contrasenia");
 		String password = in.nextLine();
 		
 		if (myLogin.hasAccess(username, password)) {
 			loggedUser = factory.getInstance(username);
 			loggedUser.printMenu();
 		} else {
-			System.out.println("Usuario o Password incorrectos");
+			System.out.println("Usuario o contrasenia incorrectos");
 		}
 		
 	}
