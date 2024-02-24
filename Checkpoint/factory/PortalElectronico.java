@@ -32,6 +32,8 @@ public class PortalElectronico {
 		} else {
 			System.out.println("Usuario o contrasenia incorrectos");
 		}
+
+        
 		
 	}
 
