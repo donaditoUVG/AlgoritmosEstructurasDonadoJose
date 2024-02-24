@@ -1,7 +1,6 @@
 /**
  * 
  */
-package edu.uvg.factory;
 
 import java.util.Scanner;
 
