@@ -18,6 +18,7 @@ public class Login {
 		users.put("maalonso@uvg.edu.gt", "password2");
 		users.put("maalonso_adm@uvg.edu.gt", "password3");
         users.put("donadito_audi@uvg.edu.gt", "1234");
+		
 	}
 	
 	public boolean hasAccess(String username, String password) {

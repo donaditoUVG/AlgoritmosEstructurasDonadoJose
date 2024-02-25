@@ -20,15 +20,13 @@ public class Employee extends User {
 		System.out.println("2. Payslip");
 	}
     
-    public void guardarInformacion(String nombreArchivo) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo))) {
-          
-          bw.write("Correo electrónico: " + username);
-          bw.newLine();
-          bw.write("Contraseña: " + password);
-          bw.flush();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-    }
+  public void guardarInformacion(String nombreArchivo) {
+  try (BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo))) {
+    bw.write(toString());
+    bw.flush();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
+    
 }

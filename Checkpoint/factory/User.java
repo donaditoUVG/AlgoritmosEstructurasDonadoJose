@@ -56,6 +56,15 @@ public abstract class User {
         // Default implementation (empty)
     }
 
-    public abstract void guardarInformacion(String nombreArchivo);
-        
+    public void guardarInformacion(String nombreArchivo) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo))) {
+          
+          bw.write("Correo electrónico: " + getUsername());
+          bw.newLine();
+          bw.write("Contraseña: " + getPassword());
+          bw.flush();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
       }
