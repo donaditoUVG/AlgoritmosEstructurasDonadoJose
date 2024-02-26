@@ -30,7 +30,7 @@ public class PortalElectronico {
 
   		loggedUser.setUsername(username);
   		loggedUser.setPassword(password);
-        loggedUser.printMenu();
+      loggedUser.printMenu();
 
       // Guardar información del usuario
       System.out.println("Desea guardar su información? (y/n)");
