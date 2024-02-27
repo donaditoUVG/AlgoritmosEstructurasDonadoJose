@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.Scanner;
 public class Student extends User {
   private Map<String, String> registrosPagos = new HashMap<>();
+  private Map<String, Double> cuotasPagadas = new HashMap<>();
 
   @Override
   public void printMenu() {
       Scanner in = new Scanner(System.in);
       int opcion;
+      //Cuotas pagadas
+      
 
       do {
           System.out.println("Bienvenido Alumno");
@@ -41,7 +44,7 @@ public class Student extends User {
                   break;
               case 5:
                   // Consultar Pagos
-                  consultarPagos();
+                  consultarCuotasPagadas();
                   break;
               case 0:
                   // Salir
@@ -89,18 +92,37 @@ public class Student extends User {
       notas[1] = "Data Science: 100";
       notas[2] = "Blue Label: 50";
 
+      
+    
+    
+
       for (int i = 0; i < notas.length; i++) {
           System.out.println(notas[i]);
       }
   }
 
-  // Consultar Pagos
-  public void consultarPagos() {
-      System.out.println("Los pagos efectuados son: ");
-      for (Map.Entry<String, String> entry : registrosPagos.entrySet()) {
-          System.out.println("Monto: " + entry.getKey() + ", Descripción: " + entry.getValue());
-      }
+  
+// Consultar Pagos
+public void consultarPagos(String nombreEstudiante, double monto) {
+  registrosPagos.put(nombreEstudiante, String.valueOf(monto));
+}
+
+// Método para consultar cuotas pagadas por un estudiante
+public void consultarCuotaPagada(String nombreEstudiante) {
+  if (cuotasPagadas.containsKey(nombreEstudiante)) {
+      System.out.println("Cuota pagada por " + nombreEstudiante + ": " + cuotasPagadas.get(nombreEstudiante));
+  } else {
+      System.out.println("No se encontró ninguna cuota pagada para " + nombreEstudiante);
   }
+}
+
+// Consultar Cuotas Pagadas
+public void consultarCuotasPagadas() {
+  for (Map.Entry<String, Double> entry : cuotasPagadas.entrySet()) {
+      System.out.println("Estudiante: " + entry.getKey() + ", Cuota Pagada: " + entry.getValue());
+  }
+}
+
 
   public void realizarPago() {
       Scanner in = new Scanner(System.in);

@@ -49,7 +49,8 @@ public class UserInstanceCreator {
 		else if (evaluate("^[a-z]+_adm@uvg.edu.gt$",username)) //This is an employee
 			return 3;
         else if (evaluate("^[a-z]+_audi@uvg.edu.gt$", username)) //Este es un auditor externo.
-        return 4;
+        	return 4;
+			
 		else 
 			return -1; //if no match found then the expression is incorrect
 	}
