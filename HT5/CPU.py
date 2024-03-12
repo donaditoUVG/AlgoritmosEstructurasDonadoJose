@@ -37,8 +37,30 @@ class SistemaOperativo:
             self.env.process(proce.proceso())
             yield self.env.timeout(random.expovariate(1.0 / self.intervalo))
 
-    class Proceso(self):
-        def _init_(self, id, env, procesador, ram, tiempos)
+    class Proceso:
+        def _init_(self, id, env, procesador, ram, tiempos):
+            def __init__(self, id, env, procesador, ram, tiempos_ejecucion):
+                self.id = id
+                self.env = env
+                self.procesador = procesador
+                self.ram = ram
+                self.tiempos = tiempos_ejecucion
+                self.requiredMemory = random.randint(1, 10)
+                self.instruccionesTotal = random.randint(1, 10)
+                self.instruccionesFaltantes = self.instruccionesTotal
+
+            def proceso(self):
+                memory = yield self.ram.get(self.requiredMemory)
+                inicio_proceso = self.env.now
+
+                while self.instruccionesFaltantes >0:
+                    with self.procesador.request() as requerido:
+                        yield requerido
+                        instruccionesHechas = min(VELOCIDAD_CPU, self.instruccionesFaltantes)
+                        yied self.env.tiemout(1)
+                        self.instruccionesFaltante -= instruccionesHechas
+
+                        
 
         # Solicitar memoria
         with RAM.get(memoria) as request:
