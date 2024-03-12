@@ -38,27 +38,27 @@ class SistemaOperativo:
             yield self.env.timeout(random.expovariate(1.0 / self.intervalo))
 
 class Proceso:
-    def _init_(self, id, env, procesador, ram, tiempos):
-        def __init__(self, id, env, procesador, ram, tiempos_ejecucion):
-                    self.id = id
-                    self.env = env
-                    self.procesador = procesador
-                    self.ram = ram
-                    self.tiempos = tiempos_ejecucion
-                    self.requiredMemory = random.randint(1, 10)
-                    self.instruccionesTotal = random.randint(1, 10)
-                    self.instruccionesFaltantes = self.instruccionesTotal
+    
+    def __init__(self, id, env, procesador, ram, tiempos_ejecucion):
+        self.id = id
+        self.env = env
+        self.procesador = procesador
+        self.ram = ram
+        self.tiempos_ejecucion = tiempos_ejecucion
+        self.memoria_necesaria = random.randint(1, 10)
+        self.instruccionesTotal = random.randint(1, 10)
+        self.instruccionesFaltantes = self.instruccionesTotal
 
     def proceso(self):
-                memory = yield self.ram.get(self.requiredMemory)
+                memoria_obtenida = yield self.ram.get(self.memoria_necesaria)
                 inicio_proceso = self.env.now
 
                 while self.instruccionesFaltantes >0:
                     with self.procesador.request() as requerido:
                         yield requerido
                         instruccionesHechas = min(VELOCIDAD_CPU, self.instruccionesFaltantes)
-                        yield self.env.tiemout(1)
-                        self.instruccionesFaltante -= instruccionesHechas
+                        yield self.env.timeout(1)
+                        self.instruccionesFaltantes -= instruccionesHechas
 
                         if self.instruccionesFaltantes <= 0:
                             tiempo_total = self.env.now - inicio_proceso
@@ -80,59 +80,21 @@ class Proceso:
 
 resultados = []
 
-        # Solicitar memoria
-        with RAM.get(memoria) as request:
-            yield request
-
-            # Tiempo en espera por memoria
-            tiempo_espera_memoria = env.now - tiempo_llegada
-
-            # Estado "Ready"
-            yield cpu.request()
-
-            # Tiempo en espera por CPU
-            tiempo_espera_cpu = env.now - tiempo_llegada - tiempo_espera_memoria
-
-            # Ejecución en CPU
-            for _ in range(INSTRUCCIONES_MAX):
-                yield env.timeout(1 / VELOCIDAD_CPU)
-
-            # Fin de la ejecución
-            tiempo_ejecucion = env.now - tiempo_llegada
-
-            # Liberar memoria
-            RAM.put(memoria)
-
-            # Generar siguiente proceso
-            if intervalo != 10:
-                env.process(proceso(env, f"{nombre}_{random.randint(1, 100)}"))
-
-            # Estadísticas
-            promedios[intervalo].append(tiempo_ejecucion)
-
-    # Ejecutar la simulación
-    for i in range(num_procesos):
-        env.process(proceso(env, f"Proceso_{i + 1}"))
-
-    env.run()
-
-    # Imprimir resultados
+for num_proceso in NUM_PROCESOS:
     for intervalo in INTERVALOS:
-        if len(promedios[intervalo]) > 0:
-            promedio = sum(promedios[intervalo]) / len(promedios[intervalo])
-            desviacion = np.std(promedios[intervalo])
-        else:
-            promedio = "N/A"
-            desviacion = "N/A"
+        p = Proceso(0, None, None, None, None)
+        tiempo_promedio, desviacion_std = p.simular(num_proceso, intervalo)
+        resultados.append((num_proceso, intervalo, tiempo_promedio, desviacion_std))
 
-        print(f"Número de Procesos: {num_procesos}")
-        print(f"Tiempo Promedio: {promedio}")
-        print(f"Desviación estándar: {desviacion}")
+for resultado in resultados:
+    print(f"Número de procesos: {resultado[0]}, Intervalo: {resultado[1]}, Tiempo promedio: {resultado[2]}, Desviación estándar: {resultado[3]}")
 
+# Gráfico
+for intervalo in INTERVALOS:
+    tiempos_promedio_intervalo = [resultado[2] for resultado in resultados if resultado[1] == intervalo]
+    mat.plot(NUM_PROCESOS, tiempos_promedio_intervalo, label=f'Intervalo {intervalo}')
 
-
-if __name__ == "__main__":
-    num_procesos_lista = [25, 50, 100, 150, 200]
-    for num_procesos in num_procesos_lista:
-        print(f"---- Simulación con {num_procesos} procesos ----")
-        main(num_procesos)
+mat.xlabel('Número de procesos')
+mat.ylabel('Tiempo promedio')
+mat.legend()
+mat.show()
