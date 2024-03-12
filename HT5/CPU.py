@@ -4,6 +4,7 @@
 import simpy
 import random
 import numpy as np
+import matplotlib.pyplot as mat
 
 RANDOM_SEED = 42
 
@@ -13,32 +14,31 @@ MEMORIA_TOTAL = 100 #RAM disponible
 CAPACIDAD_CPU = 1 #CPU's disponibles 
 VELOCIDAD_CPU = 3  # Instrucciones por cierta unidad de tiempo
 INSTRUCCIONES_MAX = 10 #max de instrucciones 
+TIEMPO_MAXIMO = 100
+NUM_PROCESOS = [25, 50, 100, 150, 200]
 
-
+tiempos_promedio = []
+desviaciones_std = []
 # Recursos y Procedimientos
 
 ##Programa Principal
-def main():
-    env = simpy.Environment()
-    random.seed(RANDOM_SEED)
+class SistemaOperativo:
+    def __init__(self, env, num_procesos, intervalo):
+        self.env = env
+        self.procesador = simpy.Resource(env, capacity=1)
+        self.ram = simpy.Container(env, init=MEMORIA_TOTAL, capacity=MEMORIA_TOTAL)
+        self.intervalo = intervalo
+        self.num_procesos = num_procesos
+        self.tiempos_ejecucion = []
 
-    RAM = simpy.Container(env, init=MEMORIA_TOTAL, capacity=MEMORIA_TOTAL)
-    cpu = simpy.Resource(env, capacity=CAPACIDAD_CPU)
+    def llegada_proceso(self):
+        for i in range(self.num_procesos):
+            proce = Proceso(i, self.env, self.procesador, self.ram, self.tiempos_ejecucion)
+            self.env.process(proce.proceso())
+            yield self.env.timeout(random.expovariate(1.0 / self.intervalo))
 
-    # Estadísticas
-    promedios = {}
-    desviaciones = {}
-
-    for intervalo in INTERVALOS:
-        promedios[intervalo] = []
-        desviaciones[intervalo] = []
-
-    def proceso(env, nombre):
-        # Tiempo de llegada
-        tiempo_llegada = env.now
-
-        # Memoria requerida
-        memoria = random.randint(1, 10)
+    class Proceso(self):
+        def _init_(self, id, env, procesador, ram, tiempos)
 
         # Solicitar memoria
         with RAM.get(memoria) as request:
@@ -71,7 +71,7 @@ def main():
             promedios[intervalo].append(tiempo_ejecucion)
 
     # Ejecutar la simulación
-    for i in range(200):
+    for i in range(num_procesos):
         env.process(proceso(env, f"Proceso_{i + 1}"))
 
     env.run()
@@ -81,14 +81,18 @@ def main():
         if len(promedios[intervalo]) > 0:
             promedio = sum(promedios[intervalo]) / len(promedios[intervalo])
             desviacion = np.std(promedios[intervalo])
-    else:
-        promedio = "N/A"
-        desviacion = "N/A"
+        else:
+            promedio = "N/A"
+            desviacion = "N/A"
+
+        print(f"Número de Procesos: {num_procesos}")
+        print(f"Tiempo Promedio: {promedio}")
+        print(f"Desviación estándar: {desviacion}")
 
 
-    print(f"Intervalo: {intervalo}")
-    print(f"Promedio: {promedio}")
-    print(f"Desviación estándar: {desviacion}")
 
 if __name__ == "__main__":
-    main()
+    num_procesos_lista = [25, 50, 100, 150, 200]
+    for num_procesos in num_procesos_lista:
+        print(f"---- Simulación con {num_procesos} procesos ----")
+        main(num_procesos)
