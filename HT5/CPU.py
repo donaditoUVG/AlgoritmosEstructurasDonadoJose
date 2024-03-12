@@ -37,19 +37,19 @@ class SistemaOperativo:
             self.env.process(proce.proceso())
             yield self.env.timeout(random.expovariate(1.0 / self.intervalo))
 
-    class Proceso:
-        def _init_(self, id, env, procesador, ram, tiempos):
-            def __init__(self, id, env, procesador, ram, tiempos_ejecucion):
-                self.id = id
-                self.env = env
-                self.procesador = procesador
-                self.ram = ram
-                self.tiempos = tiempos_ejecucion
-                self.requiredMemory = random.randint(1, 10)
-                self.instruccionesTotal = random.randint(1, 10)
-                self.instruccionesFaltantes = self.instruccionesTotal
+class Proceso:
+    def _init_(self, id, env, procesador, ram, tiempos):
+        def __init__(self, id, env, procesador, ram, tiempos_ejecucion):
+                    self.id = id
+                    self.env = env
+                    self.procesador = procesador
+                    self.ram = ram
+                    self.tiempos = tiempos_ejecucion
+                    self.requiredMemory = random.randint(1, 10)
+                    self.instruccionesTotal = random.randint(1, 10)
+                    self.instruccionesFaltantes = self.instruccionesTotal
 
-            def proceso(self):
+    def proceso(self):
                 memory = yield self.ram.get(self.requiredMemory)
                 inicio_proceso = self.env.now
 
@@ -65,6 +65,20 @@ class SistemaOperativo:
                             self.tiempos_ejecucion.append(tiempo_total)
                             self.ram.put(self.memoria_necesaria)
                             break
+
+    def simular(self, num_procesos, intervalo):
+        random.seed(RANDOM_SEED)
+        env = simpy.Environment()
+        sistema = SistemaOperativo(env, num_procesos, intervalo)
+        env.process(sistema.llegada_proceso())
+        env.run()
+
+        ##Calculo del tiempo promedio y desviacion estandar de los tiempos de ejecucion
+        tiempo_promedio = np.mean(sistema.tiempos_ejecucion)
+        desviacion_std = np.std(sistema.tiempos_ejecucion)
+        return tiempo_promedio, desviacion_std
+
+resultados = []
 
         # Solicitar memoria
         with RAM.get(memoria) as request:
