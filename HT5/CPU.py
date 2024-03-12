@@ -87,14 +87,14 @@ for num_proceso in NUM_PROCESOS:
         resultados.append((num_proceso, intervalo, tiempo_promedio, desviacion_std))
 
 for resultado in resultados:
-    print(f"Número de procesos: {resultado[0]}, Intervalo: {resultado[1]}, Tiempo promedio: {resultado[2]}, Desviación estándar: {resultado[3]}")
+    print(f"Cantidad de Procesos: {resultado[0]}, Intervalo: {resultado[1]}, Tiempo Medio: {resultado[2]}, Desviación Estándar: {resultado[3]}")
 
 # Gráfico
 for intervalo in INTERVALOS:
     tiempos_promedio_intervalo = [resultado[2] for resultado in resultados if resultado[1] == intervalo]
     mat.plot(NUM_PROCESOS, tiempos_promedio_intervalo, label=f'Intervalo {intervalo}')
 
-mat.xlabel('Número de procesos')
-mat.ylabel('Tiempo promedio')
+mat.xlabel('Cantidad de Procesos')
+mat.ylabel('Tiempo Promedio')
 mat.legend()
 mat.show()
