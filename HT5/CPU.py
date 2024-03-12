@@ -57,10 +57,14 @@ class SistemaOperativo:
                     with self.procesador.request() as requerido:
                         yield requerido
                         instruccionesHechas = min(VELOCIDAD_CPU, self.instruccionesFaltantes)
-                        yied self.env.tiemout(1)
+                        yield self.env.tiemout(1)
                         self.instruccionesFaltante -= instruccionesHechas
 
-                        
+                        if self.instruccionesFaltantes <= 0:
+                            tiempo_total = self.env.now - inicio_proceso
+                            self.tiempos_ejecucion.append(tiempo_total)
+                            self.ram.put(self.memoria_necesaria)
+                            break
 
         # Solicitar memoria
         with RAM.get(memoria) as request:
