@@ -24,9 +24,6 @@ public class Main {
         // Seleccionar implementación de mapa
         Map<String, Student> studentMap = mapFactory.getMap(mapOption);
 
-        // Aquí puedes continuar con la lógica para leer el archivo JSON y cargar los datos en el mapa
-        // Por simplicidad, asumamos que ya hemos cargado los datos en el mapa
-
         // Mostrar los datos de los estudiantes
         for (Map.Entry<String, Student> entry : studentMap.entrySet()) {
             System.out.println("Clave: " + entry.getKey());
@@ -44,21 +41,6 @@ public class Main {
         int option = scanner.nextInt();
         scanner.close();
         return option;
-    }
-}
-
-class Student {
-    private String name;
-    private String phone;
-    private String email;
-    private String postalZip;
-    private String country;
-
-    // Constructores, getters y setters aquí
-
-    @Override
-    public String toString() {
-        return "Name: " + name + ", Email: " + email; // Puedes agregar más campos según sea necesario
     }
 }
 
