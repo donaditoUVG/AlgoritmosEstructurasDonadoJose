@@ -12,9 +12,14 @@ elementos de forma más lenta que las demás clases.
  import java.io.File;
 
  import java.util.*;
+ 
+
+
 
 public class Main {
     public static void main(String[] args) {
+        
+
         // Mostrar opciones de configuración al usuario
         int mapOption = selectMapImplementation();
 
@@ -29,6 +34,10 @@ public class Main {
             System.out.println("Clave: " + entry.getKey());
             System.out.println("Estudiante: " + entry.getValue());
         }
+    }
+
+    public static IngresoManual {
+        
     }
 
     private static int selectMapImplementation() {
